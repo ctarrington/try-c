@@ -104,12 +104,70 @@ bool accept() {
     return (response == 'y');
 }
 
+void dereference(char* charPtr, char aChar) {
+    char c = *charPtr;
+    cout << "in dereference " << " c " << c << " " << " aChar " << aChar << endl;
+    *charPtr = 'd';
+
+    aChar = 'q';
+}
+
+void sharedStrings() {
+    const char* p = "foo";
+    const char* q = "foo";
+
+    if (p == q) {
+        cout << "shared strings" << endl;
+    } else {
+        cout << "no shared strings" << endl;
+    }
+}
+
+//  pointer to a constant int NOT a constant pointer to an int
+void useButDoNotChange(const int * iPtr) {
+    cout << "ubdnt expect 1 " << *iPtr << endl;
+
+    iPtr++;
+    cout << "ubdnt expect 2 " << *iPtr << endl;
+    // nope *iPtr = 4;
+}
+
+void manipulateArrays() {
+    int values[] = {1,2,3};
+    int* iPtr = values;
+    cout << "expect 1 " << *iPtr << endl;
+    iPtr += 2;
+    cout << "expect 3 " << *iPtr << endl;
+
+    const int nums[] = {1,2,3};
+    cout << "expect 2 " << nums[1] << endl;
+
+    // nums[1] = 4;  error
+    // but this is C - we do what we want
+    iPtr = (int*) &nums[1];
+    *iPtr = 4;
+    cout << "expect 4 " << nums[1] << endl;
+
+    useButDoNotChange(values);
+}
+
 int main() {
-    cout << accept() << endl;
+//    cout << accept() << endl;
     manipulateCharacters();
     manipulateStack();
     manipulateVectors();
     manipulateMap();
     primitiveConstruction();
+    manipulateArrays();
+
+    char c('h');
+    char d('i');
+
+    cout << "before mutating function " << " c " << c << " " << " d " << d << endl;
+    dereference(&c, d);
+    cout << "after mutating function " << " c " << c << " " << " d " << d << endl;
+
+    sharedStrings();
+
     return 0;
 }
