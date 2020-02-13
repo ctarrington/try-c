@@ -6,7 +6,9 @@
 using namespace std;
 
 class Greeting {
-    private: string prefix;
+
+private:
+    string prefix;
 
 public:
     Greeting(string prefix);
