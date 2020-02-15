@@ -36,6 +36,6 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(testing GreetingTest.cpp Greeting.cpp Greeting.h RunningAverage.cpp RunningAverage.h RunningAverageTest.cpp CompilationChecks.cpp)
+add_executable(testing GreetingTest.cpp Greeting.cpp Greeting.h RunningAverage.cpp RunningAverage.h RunningAverageTest.cpp CompilationChecks.cpp DestructuringTest.cpp)
 target_link_libraries(testing gtest_main)
 add_test(NAME silly_tests COMMAND testing)
