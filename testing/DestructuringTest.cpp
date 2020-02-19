@@ -10,12 +10,20 @@ public:
         this->height = height;
     }
 
+    Person(const Person&) = default;
+    Person& operator=(const Person&) = default;
+
     string getName() {
         return name;
     }
 
     int getheight() {
         return height;
+    }
+
+    void mutate() {
+        this->name = "ARRRRGGGHHHH";
+        this->height *= 3;
     }
 
 private:
@@ -40,4 +48,23 @@ TEST(DestructuringTests, Simple) {
     EXPECT_TRUE(status);
     EXPECT_EQ("Fred", personPtr->getName());
     EXPECT_EQ(66, personPtr->getheight());
+}
+
+void mutate(Person mutant) {
+    mutant.mutate();
+}
+
+
+TEST(DestructuringTests, MutationsPrevetedByCopy) {
+    auto [personPtr, status] = addEmployee("Fred", 66);
+    mutate(*personPtr);
+
+    EXPECT_TRUE(status);
+    EXPECT_EQ("Fred", personPtr->getName());
+    EXPECT_EQ(66, personPtr->getheight());
+
+    personPtr->mutate();
+    EXPECT_EQ("ARRRRGGGHHHH", personPtr->getName());
+    EXPECT_EQ(66*3, personPtr->getheight());
+
 }

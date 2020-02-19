@@ -2,6 +2,16 @@
 
 using namespace std;
 
+class ImportantResource {
+public:
+    ImportantResource() {
+
+    }
+
+    ImportantResource(const ImportantResource&) = delete;
+    ImportantResource& operator=(const ImportantResource&) = delete;
+};
+
 void foo() {
     const int const_int = 1;
     // const_int = 2;
@@ -39,3 +49,9 @@ void use_mutate() {
     cout << const_name << endl;
 }
 
+void makeACopy() {
+    cout << "hi" << endl;
+}
+
+auto resource1_ptr = new ImportantResource();
+//auto resource1 = *resource1_ptr;   // compilation error
