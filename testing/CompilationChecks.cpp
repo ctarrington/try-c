@@ -31,6 +31,10 @@ void foo() {
     // *const_pointer_to_const_int = 2;
     // const_pointer_to_const_int = &b;
 
+    const int& reference_to_const_int = 10;
+    // reference_to_const_int = 11;
+    int& liberated_reference_to_int = const_cast<int&>(reference_to_const_int);
+    liberated_reference_to_int = 11;
 }
 
 void mutate(string *name_ptr) {
