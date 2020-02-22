@@ -32,8 +32,8 @@ private:
 };
 
 struct PersonResult {
-    Person* person;
-    bool success;
+    Person* personPtr;
+    bool status;
 };
 
 PersonResult addEmployee(string name, int height) {
@@ -43,11 +43,13 @@ PersonResult addEmployee(string name, int height) {
 }
 
 TEST(DestructuringTests, Simple) {
-    auto [personPtr, status] = addEmployee("Fred", 66);
+    // decomposition requires C++17
+    // auto [personPtr, status] = addEmployee("Fred", 66);
+    PersonResult results = addEmployee("Fred", 66);
 
-    EXPECT_TRUE(status);
-    EXPECT_EQ("Fred", personPtr->getName());
-    EXPECT_EQ(66, personPtr->getheight());
+    EXPECT_TRUE(results.status);
+    EXPECT_EQ("Fred", results.personPtr->getName());
+    EXPECT_EQ(66, results.personPtr->getheight());
 }
 
 void mutate(Person mutant) {
@@ -55,16 +57,18 @@ void mutate(Person mutant) {
 }
 
 
-TEST(DestructuringTests, MutationsPrevetedByCopy) {
-    auto [personPtr, status] = addEmployee("Fred", 66);
-    mutate(*personPtr);
+TEST(DestructuringTests, MutationsPreventedByCopy) {
+    // decomposition requires C++17
+    // auto [personPtr, status] = addEmployee("Fred", 66);
+    PersonResult results = addEmployee("Fred", 66);
+    mutate(*results.personPtr);
 
-    EXPECT_TRUE(status);
-    EXPECT_EQ("Fred", personPtr->getName());
-    EXPECT_EQ(66, personPtr->getheight());
+    EXPECT_TRUE(results.status);
+    EXPECT_EQ("Fred", results.personPtr->getName());
+    EXPECT_EQ(66, results.personPtr->getheight());
 
-    personPtr->mutate();
-    EXPECT_EQ("ARRRRGGGHHHH", personPtr->getName());
-    EXPECT_EQ(66*3, personPtr->getheight());
+    results.personPtr->mutate();
+    EXPECT_EQ("ARRRRGGGHHHH", results.personPtr->getName());
+    EXPECT_EQ(66*3, results.personPtr->getheight());
 
 }
