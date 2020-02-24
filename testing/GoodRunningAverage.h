@@ -1,6 +1,10 @@
 #ifndef TESTING_GOODRUNNINGAVERAGE_H
 #define TESTING_GOODRUNNINGAVERAGE_H
 
+#include <cmath>
+
+// include implementation in header to avoid linkage issues with templated class
+
 template<typename T>
 class GoodRunningAverage {
 private:
@@ -8,7 +12,10 @@ private:
     int count = 0;
 
 public:
-    GoodRunningAverage();
+    GoodRunningAverage() {
+        static_assert(std::is_arithmetic<T>(), "Type must support addition and division.");
+    }
+
     GoodRunningAverage(const GoodRunningAverage&) = delete;
     GoodRunningAverage(const GoodRunningAverage&&) = delete;
 
@@ -16,11 +23,11 @@ public:
     void operator=(const GoodRunningAverage&&) = delete;
 
 
-    T push(T value);
+    T push(T value) {
+        this->total += value;
+        this->count++;
+        return round((float)this->total / (float)this->count);
+    }
 };
-
-// include the implementation so the generated template methods are linked
-#include "GoodRunningAverage.cpp"
-
 
 #endif //TESTING_GOODRUNNINGAVERAGE_H
