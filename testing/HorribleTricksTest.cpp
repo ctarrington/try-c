@@ -52,3 +52,24 @@ TEST(HorribleTricksTests, charactersForNumbers) {
     int savings = sizeof(seven) - sizeof(sevenChar);
     EXPECT_EQ(1, savings);
 }
+
+TEST(HorribleTricksTests, iterationWithPosition) {
+    string name = "Fred Flint";
+    char fname[5] = "";
+    char lname[6] = "";
+    int fPosition = 0;
+    int lPosition = 0;
+
+    for (string::const_iterator charItr = name.cbegin(); charItr != name.cend(); charItr++) {
+        int offset = charItr - name.cbegin();
+
+        if (offset < 4) {
+            fname[fPosition++] = *charItr;
+        } else if (offset > 4 && offset < 10) {
+            lname[lPosition++] = *charItr;
+        }
+    }
+
+    EXPECT_STREQ("Fred", fname);
+    EXPECT_STREQ("Flint", lname);
+}
