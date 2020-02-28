@@ -36,3 +36,19 @@ TEST(HorribleTricksTests, calculateOffset) {
     int height = (int) buffer[height_offset];
     EXPECT_EQ(height, joe->height);
 }
+
+TEST(HorribleTricksTests, charactersForNumbers) {
+    // horrible is a bit of an overstatement.
+    char sevenChar = 7;
+    char sevenString[6];
+    sprintf(sevenString, "%hhd.0", sevenChar);
+    EXPECT_STREQ("7.0", sevenString);
+
+    short seven = 7;
+    sprintf(sevenString, "%hhd.0", seven);
+    EXPECT_STREQ("7.0", sevenString);
+
+    // as a one byte savings isn't nothing
+    int savings = sizeof(seven) - sizeof(sevenChar);
+    EXPECT_EQ(1, savings);
+}
