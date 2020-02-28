@@ -59,3 +59,16 @@ void makeACopy() {
 
 auto resource1_ptr = new ImportantResource();
 //auto resource1 = *resource1_ptr;   // compilation error
+
+namespace Outer {
+    namespace Inner {
+        int add(int a, int b) {
+            return a+b;
+        }
+    }
+}
+
+int sum = Outer::Inner::add(1,2);
+// int nope = add(1,2);
+
+
