@@ -53,10 +53,6 @@ void use_mutate() {
     cout << const_name << endl;
 }
 
-void makeACopy() {
-    cout << "hi" << endl;
-}
-
 auto resource1_ptr = new ImportantResource();
 //auto resource1 = *resource1_ptr;   // compilation error
 

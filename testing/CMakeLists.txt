@@ -35,7 +35,13 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
+set(Boost_DEBUG OFF)
+set(BOOST_ROOT /usr/local/boost_1_67_0)
+
+find_package(Boost 1.67)
+include_directories(${Boost_INCLUDE_DIR})
+
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(testing GreetingTest.cpp Greeting.cpp Greeting.h BadRunningAverage.cpp BadRunningAverage.h GoodRunningAverage.h RunningAverageTest.cpp CompilationChecks.cpp DestructuringTest.cpp HorribleTricksTest.cpp)
-target_link_libraries(testing gtest_main)
+add_executable(testing GreetingTest.cpp Greeting.cpp Greeting.h BadRunningAverage.cpp BadRunningAverage.h GoodRunningAverage.h RunningAverageTest.cpp CompilationChecks.cpp DestructuringTest.cpp HorribleTricksTest.cpp BoostDatesTest.cpp)
+target_link_libraries(testing gtest_main ${Boost_LIBRARIES})
 add_test(NAME silly_tests COMMAND testing)
