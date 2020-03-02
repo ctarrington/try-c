@@ -36,9 +36,9 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 set(Boost_DEBUG OFF)
-set(BOOST_ROOT /usr/local/boost_1_72_0)
+set(BOOST_ROOT /usr/local)
 
-find_package(Boost 1.72)
+find_package(Boost 1.72 COMPONENTS filesystem)
 include_directories(${Boost_INCLUDE_DIR})
 
 message(STATUS "Boost version: ${Boost_VERSION}")
@@ -46,5 +46,5 @@ message(STATUS "Boost version: ${Boost_VERSION}")
 
 # Now simply link against gtest or gtest_main as needed. Eg
 add_executable(testing GreetingTest.cpp Greeting.cpp Greeting.h BadRunningAverage.cpp BadRunningAverage.h GoodRunningAverage.h RunningAverageTest.cpp CompilationChecks.cpp DestructuringTest.cpp HorribleTricksTest.cpp BoostTidbitsTest.cpp)
-target_link_libraries(testing gtest_main)
+target_link_libraries(testing gtest_main ${Boost_LIBRARIES})
 add_test(NAME silly_tests COMMAND testing)
