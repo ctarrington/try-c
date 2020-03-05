@@ -93,3 +93,15 @@ TEST(HorribleTricksTests, alternativeIteration) {
     EXPECT_STREQ("Fred", fname);
     EXPECT_STREQ("Flint", lname);
 }
+
+TEST(HorribleTricksTests, constCast) {
+    const int& safe_int = 4;
+    // safe_int = 5; //nope
+
+    int& unsafe_int = const_cast<int&>(safe_int);
+    EXPECT_EQ(4,unsafe_int);
+
+    unsafe_int = 6;
+    EXPECT_EQ(6, unsafe_int);
+    EXPECT_EQ(6, safe_int);
+}
