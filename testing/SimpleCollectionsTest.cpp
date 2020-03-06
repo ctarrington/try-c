@@ -15,4 +15,20 @@ TEST(SimpleCollectionsTest, usage) {
 
     EXPECT_THROW(numbers.at(10), std::out_of_range);
     EXPECT_ANY_THROW(numbers.at(10));
+
+    int* numbersP = numbers.data();
+    EXPECT_EQ(1, *numbersP++);
+    EXPECT_EQ(2, *numbersP++);
+
+    int sum = 0;
+    for (auto itr = numbers.begin();itr != numbers.end();itr++) {
+        sum += *itr;
+    }
+    EXPECT_EQ(10, sum);
+
+    sum = 0;
+    for (const int number : numbers) {
+        sum += number;
+    }
+    EXPECT_EQ(10, sum);
 }
