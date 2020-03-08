@@ -1,8 +1,9 @@
 #include <array>
+#include <vector>
 
 #include "gtest/gtest.h"
 
-TEST(SimpleCollectionsTest, usage) {
+TEST(SimpleCollectionsTest, arrayUsage) {
     std::array<int, 10> numbers {1,2,3};
     EXPECT_EQ(3, numbers[2]);
     EXPECT_EQ(0, numbers.at(3));
@@ -33,4 +34,17 @@ TEST(SimpleCollectionsTest, usage) {
         sum += number;
     }
     EXPECT_EQ(10, sum);
+}
+
+TEST(SimpleCollectionsTest, vectorUsage) {
+    std::vector<int> odds{1};
+
+    odds.insert(odds.end(), 3);
+    odds.push_back(5);
+    odds.insert(odds.begin(), -1);
+    odds.insert(odds.begin() + 4, 7);
+
+    EXPECT_EQ(-1, odds.at(0));
+    EXPECT_EQ(5, odds.at(3));
+    EXPECT_EQ(7, odds.at(4));
 }
