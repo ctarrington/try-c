@@ -12,13 +12,18 @@
 
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/random.hpp>
 
 class Generator {
-public:
+private:
     static int reps;
     static int interval;
-    static void init(int interval, int repititions);
+    static boost::random::mt19937 gen;
+    static boost::random::uniform_int_distribution<> dist;
     static void send(const boost::system::error_code&, boost::asio::steady_timer* timer, int* count);
+
+public:
+    static void init(int interval, int repititions);
 };
 
 

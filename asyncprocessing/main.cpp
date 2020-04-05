@@ -4,6 +4,6 @@
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
-    Generator::init(3, 3);
+    Generator::init(100, 50);
     return 0;
 }
