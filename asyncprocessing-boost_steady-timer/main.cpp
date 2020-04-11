@@ -6,7 +6,7 @@
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
-    // Generator::init(100, 50);
+     Generator::init(100, 50);
 
 
     Inner* innerP = new Inner();
