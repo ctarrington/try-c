@@ -14,5 +14,5 @@ message(STATUS "Boost version: ${Boost_VERSION}")
 message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
 message(STATUS "Boost includes: ${Boost_INCLUDE_DIR}")
 
-add_executable(asyncprocessing main.cpp Generator.cpp Generator.h)
+add_executable(asyncprocessing main.cpp Generator.cpp Generator.h Inner.cpp Inner.h Outer.cpp Outer.h)
 target_link_libraries(asyncprocessing ${Boost_LIBRARIES})
