@@ -45,6 +45,6 @@ message(STATUS "Boost version: ${Boost_VERSION}")
 
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(testing GreetingTest.cpp Greeting.cpp Greeting.h BadRunningAverage.cpp BadRunningAverage.h GoodRunningAverage.h RunningAverageTest.cpp CompilationChecks.cpp DestructuringTest.cpp HorribleTricksTest.cpp BoostTidbitsTest.cpp SimpleCollectionsTest.cpp GreeterFunctionTest.cpp ScopesTest.cpp)
+add_executable(testing GreetingTest.cpp Greeting.cpp Greeting.h BadRunningAverage.cpp BadRunningAverage.h GoodRunningAverage.h RunningAverageTest.cpp CompilationChecks.cpp DestructuringTest.cpp HorribleTricksTest.cpp BoostTidbitsTest.cpp SimpleCollectionsTest.cpp GreeterFunctionTest.cpp ScopesTest.cpp TypeDeterminationTest.cpp)
 target_link_libraries(testing gtest_main ${Boost_LIBRARIES})
 add_test(NAME silly_tests COMMAND testing)
