@@ -6,6 +6,23 @@
 template <typename T>
 class ForTypeChecking;
 
+class Thing {
+public:
+    static int copyCount;
+    int id;
+
+    Thing(int _id) {
+        this->id = _id;
+    }
+
+    Thing(const Thing& person) {
+        this->id = person.id;
+        copyCount++;
+    }
+};
+
+int Thing::copyCount = 0;
+
 TEST(TypeDeterminationTest, compileTime) {
     auto x = 1;
 
@@ -52,4 +69,39 @@ TEST(TypeDeterminationTest, runTime) {
     EXPECT_EQ(1, first);
     EXPECT_STREQ("i", typeid(first).name());
 
+}
+
+TEST(TypeDeterminationTest, autoIsBetter) {
+    Thing* p1 = new Thing(1);
+    Thing* p2 = new Thing(*p1);
+    EXPECT_EQ(1, Thing::copyCount);
+    EXPECT_EQ(1, p1->id);
+    EXPECT_EQ(1, p2->id);
+    p2->id = 55;
+    EXPECT_EQ(1, p1->id);
+    EXPECT_EQ(55, p2->id);
+
+    auto things = std::vector<Thing>{Thing(2), Thing(3)};
+    EXPECT_EQ(3, Thing::copyCount);  // copied into vector
+
+    auto otherThings = std::vector<Thing>();
+    const Thing& t10 = Thing(10);
+    EXPECT_EQ(3, Thing::copyCount);
+
+    otherThings.push_back(t10);
+    EXPECT_EQ(4, Thing::copyCount); // copied into vector
+    EXPECT_EQ(10, otherThings.at(0).id);
+    otherThings.at(0).id = 66;
+    EXPECT_EQ(66, otherThings.at(0).id);
+    EXPECT_EQ(10, t10.id);
+
+
+    auto itr = things.cbegin();
+    auto thingP = itr;
+    EXPECT_EQ(2, thingP->id);
+    EXPECT_EQ(4, Thing::copyCount);  // no copy needed because we used cbegin and left things alone with auto
+
+    thingP = next(itr);
+    EXPECT_EQ(3, thingP->id);
+    EXPECT_EQ(4, Thing::copyCount);  // no copy needed
 }
