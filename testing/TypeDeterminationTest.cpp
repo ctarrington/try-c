@@ -41,10 +41,12 @@ TEST(TypeDeterminationTest, runTime) {
 
     std::vector<int> numbers{1,2,3,4};
     EXPECT_EQ(1, numbers.at(0));
-    EXPECT_STREQ("NSt3__16vectorIiNS_9allocatorIiEEEE", typeid(numbers).name());
+    string numbers_typename = typeid(numbers).name();
+    EXPECT_TRUE( numbers_typename == "NSt3__16vectorIiNS_9allocatorIiEEEE" || numbers_typename == "St6vectorIiSaIiEE");
 
     auto cpi = numbers.cbegin();
-    EXPECT_STREQ("NSt3__111__wrap_iterIPKiEE", typeid(cpi).name());
+    string cpi_typename = typeid(cpi).name();
+    EXPECT_TRUE( cpi_typename == "NSt3__111__wrap_iterIPKiEE" || cpi_typename == "N9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEE");
 
     int first = *cpi;
     EXPECT_EQ(1, first);
