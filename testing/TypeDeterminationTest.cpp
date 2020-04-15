@@ -95,13 +95,25 @@ TEST(TypeDeterminationTest, autoIsBetter) {
     EXPECT_EQ(66, otherThings.at(0).id);
     EXPECT_EQ(10, t10.id);
 
+    {
+        auto itr = things.cbegin();
+        auto thing1P = itr;
+        EXPECT_EQ(2, thing1P->id);
+        EXPECT_EQ(4, Thing::copyCount);  // no copy needed
 
-    auto itr = things.cbegin();
-    auto thingP = itr;
-    EXPECT_EQ(2, thingP->id);
-    EXPECT_EQ(4, Thing::copyCount);  // no copy needed because we used cbegin and left things alone with auto
+        auto thing2P = next(itr);
+        EXPECT_EQ(3, thing2P->id);
+        EXPECT_EQ(4, Thing::copyCount);  // no copy needed
+    }
 
-    thingP = next(itr);
-    EXPECT_EQ(3, thingP->id);
-    EXPECT_EQ(4, Thing::copyCount);  // no copy needed
+    {
+        auto itr = things.cbegin();
+        auto thing1 = *itr;
+        EXPECT_EQ(2, thing1.id);
+        EXPECT_EQ(5, Thing::copyCount);  // copy needed
+
+        auto thing2 = *next(itr);
+        EXPECT_EQ(3, thing2.id);
+        EXPECT_EQ(6, Thing::copyCount);  // copy needed
+    }
 }
