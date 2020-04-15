@@ -95,10 +95,17 @@ TEST(TypeDeterminationTest, autoIsBetter) {
     EXPECT_EQ(66, otherThings.at(0).id);
     EXPECT_EQ(10, t10.id);
 
+    // so tiresome
+    {
+        std::vector<const Thing>::iterator citr = things.cbegin();
+        std::vector<Thing>::iterator itr = things.begin();
+    }
+
     {
         auto itr = things.cbegin();
         auto thing1P = itr;
         EXPECT_EQ(2, thing1P->id);
+        // thing1P->id = 44; // compile time fail - we used cbegin so no go
         EXPECT_EQ(4, Thing::copyCount);  // no copy needed
 
         auto thing2P = next(itr);
