@@ -54,6 +54,12 @@ TEST(CopyAndMoveTest, copy) {
 
     EXPECT_EQ(1, Thingy::copyCount);
     EXPECT_EQ(0, Thingy::moveCount);
+
+    Thingy t3(t1);
+    EXPECT_EQ(2, Thingy::copyCount);
+    EXPECT_EQ(0, Thingy::moveCount);
+
+
 }
 
 
