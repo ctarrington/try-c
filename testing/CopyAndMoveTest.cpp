@@ -23,14 +23,16 @@ public:
         copyCount++;
     }
 
-    // never const
-    Thingy(Thingy&& person) {
+    // never const, noexcept facilitates use of move by containers
+    Thingy(Thingy&& person) noexcept {
         this->id = person.id;
         person.id = 0;
         this->name = std::move(person.name);
         moveCount++;
     }
 };
+
+using Thingies = std::vector<Thingy>;
 
 int Thingy::copyCount = 0;
 int Thingy::moveCount = 0;
@@ -64,8 +66,29 @@ TEST(CopyAndMoveTest, move) {
     EXPECT_STREQ("", t1.name.c_str());
     EXPECT_STREQ("one", t2.name.c_str());
 
+    EXPECT_EQ(0, t1.id);
+    EXPECT_EQ(1, t2.id);
+
+
     EXPECT_EQ(0, Thingy::copyCount);
     EXPECT_EQ(1, Thingy::moveCount);
+}
+
+TEST(CopyAndMoveTest, createAndMoveToVector) {
+    resetCounts();
+    Thingy t1{1, "one"};
+    Thingy t2{2, "two"};
+
+    Thingies thingies{};
+
+    thingies.push_back(std::move(t1));
+    thingies.push_back(std::move(t2));
+
+    EXPECT_EQ(0, Thingy::copyCount);
+    EXPECT_EQ(3, Thingy::moveCount);  // two for insertion and one for re-allocation with move.
+
+    EXPECT_EQ(0, t1.id);
+
 }
 
 TEST(CopyAndMoveTest, moveString) {
