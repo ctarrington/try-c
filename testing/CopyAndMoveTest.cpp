@@ -12,22 +12,25 @@ public:
     string name;
     int id;
 
-    Thingy(int _id, string _name) {
-        this->id = _id;
-        this->name = _name;
+    Thingy(int _id, string _name):
+        id(_id ),
+        name(_name) {
     }
 
-    Thingy(const Thingy& person) {
-        this->id = person.id;
-        this->name = person.name;
+    Thingy(const Thingy& person):
+    id(person.id),
+    name(person.name) {
         copyCount++;
     }
 
-    // never const, noexcept facilitates use of move by containers
-    Thingy(Thingy&& person) noexcept {
-        this->id = person.id;
+    // never use const in move
+    // noexcept facilitates use of move by containers
+    // note move doesnt nuke name, std:string's move assignment nukes name
+    // move just changes type
+    Thingy(Thingy&& person) noexcept :
+    id(person.id),
+    name(std::move(person.name)) {
         person.id = 0;
-        this->name = std::move(person.name);
         moveCount++;
     }
 };
@@ -69,23 +72,22 @@ TEST(CopyAndMoveTest, move) {
     Thingy t1(1, "one");
     Thingy t2 = std::move(t1);
 
+    EXPECT_EQ(0, Thingy::copyCount);
+    EXPECT_EQ(1, Thingy::moveCount);
+
     EXPECT_STREQ("", t1.name.c_str());
     EXPECT_STREQ("one", t2.name.c_str());
 
     EXPECT_EQ(0, t1.id);
     EXPECT_EQ(1, t2.id);
-
-
-    EXPECT_EQ(0, Thingy::copyCount);
-    EXPECT_EQ(1, Thingy::moveCount);
 }
 
-TEST(CopyAndMoveTest, createAndMoveToVector) {
+TEST(CopyAndMoveTest, createAndMoveToVectorAllocation) {
     resetCounts();
     Thingy t1{1, "one"};
     Thingy t2{2, "two"};
 
-    Thingies thingies{};
+    Thingies thingies;
 
     thingies.push_back(std::move(t1));
     thingies.push_back(std::move(t2));
@@ -94,7 +96,24 @@ TEST(CopyAndMoveTest, createAndMoveToVector) {
     EXPECT_EQ(3, Thingy::moveCount);  // two for insertion and one for re-allocation with move.
 
     EXPECT_EQ(0, t1.id);
+}
 
+
+TEST(CopyAndMoveTest, createAndMoveToVectorNoAllocation) {
+    resetCounts();
+    Thingy t1{1, "one"};
+    Thingy t2{2, "two"};
+
+    Thingies thingies;
+    thingies.reserve(2);
+
+    thingies.push_back(std::move(t1));
+    thingies.push_back(std::move(t2));
+
+    EXPECT_EQ(0, Thingy::copyCount);
+    EXPECT_EQ(2, Thingy::moveCount);  // two for insertion
+
+    EXPECT_EQ(0, t1.id);
 }
 
 TEST(CopyAndMoveTest, moveString) {
