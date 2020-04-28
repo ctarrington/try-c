@@ -96,10 +96,8 @@ TEST(TypeDeterminationTest, autoIsBetter) {
     EXPECT_EQ(10, t10.id);
 
     // so tiresome
-    {
-        std::vector<const Thing>::iterator citr = things.cbegin();
-        std::vector<Thing>::iterator itr = things.begin();
-    }
+    // std::vector<const Thing>::iterator citr = things.cbegin();
+    // std::vector<Thing>::iterator itr = things.begin();
 
     {
         auto itr = things.cbegin();
