@@ -55,11 +55,24 @@ TEST(InitializationAndIterationsTest, basic) {
     IIThing::resetCounts();
 
     concat = "";
+    for (auto thing : things) {
+        thing.name = thing.name+",";
+        concat += thing.name;
+    }
+
+    EXPECT_STREQ("Fred,Ted,", concat.c_str());
+    EXPECT_EQ(0, IIThing::numConstructions);
+    EXPECT_EQ(2, IIThing::numCopies); // copied in loop
+    EXPECT_STREQ("Fred", things.at(0).name.c_str());  // No change to the contents of the vector
+    IIThing::resetCounts();
+
+    concat = "";
     for (auto& thing : things) { // use an auto reference to be easy and avoid copies. Can't use const since we are going to decorate it
         thing.name = thing.name+",";
         concat += thing.name;
     }
     EXPECT_STREQ("Fred,Ted,", concat.c_str());
+    EXPECT_EQ(0, IIThing::numConstructions);
     EXPECT_EQ(0, IIThing::numCopies);
 
     concat = "";
@@ -67,6 +80,7 @@ TEST(InitializationAndIterationsTest, basic) {
         concat += thing.name;
     }
     EXPECT_STREQ("Fred,Ted,", concat.c_str());  // yep the comma is still there
+    EXPECT_EQ(0, IIThing::numConstructions);
     EXPECT_EQ(0, IIThing::numCopies);
 
 }
