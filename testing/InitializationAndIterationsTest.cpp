@@ -44,7 +44,7 @@ TEST(InitializationAndIterationsTest, basic) {
     vector<IIThing> things {IIThing{"Fred"}, IIThing{"Ted"}};
 
     string concat = "";
-    for (auto thing : things) {
+    for (const auto thing : things) {
         concat += thing.name;
     }
 
@@ -55,10 +55,20 @@ TEST(InitializationAndIterationsTest, basic) {
     IIThing::resetCounts();
 
     concat = "";
-    for (auto& thing : things) { // use an auto reference to be easy and avoid copies
+    for (auto& thing : things) { // use an auto reference to be easy and avoid copies. Can't use const since we are going to decorate it
+        thing.name = thing.name+",";
         concat += thing.name;
     }
+    EXPECT_STREQ("Fred,Ted,", concat.c_str());
     EXPECT_EQ(0, IIThing::numCopies);
+
+    concat = "";
+    for (const auto& thing : things) { // use an auto reference to be easy and avoid copies.
+        concat += thing.name;
+    }
+    EXPECT_STREQ("Fred,Ted,", concat.c_str());  // yep the comma is still there
+    EXPECT_EQ(0, IIThing::numCopies);
+
 }
 
 TEST(InitializationAndIterationsTest, initializerWins) {
