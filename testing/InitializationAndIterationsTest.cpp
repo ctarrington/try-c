@@ -61,5 +61,15 @@ TEST(InitializationAndIterationsTest, basic) {
     EXPECT_EQ(0, IIThing::numCopies);
 }
 
+TEST(InitializationAndIterationsTest, initializerWins) {
+    vector<int> numbers(10, 1); // size, fill value
+    EXPECT_EQ(1, numbers.at(9));
+
+    vector<int> tenAndOne {10, 1};
+    EXPECT_EQ(10, tenAndOne.at(0));
+    EXPECT_EQ(1, tenAndOne.at(1));
+    EXPECT_EQ(2, tenAndOne.size());
+}
+
 
 
