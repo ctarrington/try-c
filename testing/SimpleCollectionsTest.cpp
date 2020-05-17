@@ -48,3 +48,20 @@ TEST(SimpleCollectionsTest, vectorUsage) {
     EXPECT_EQ(5, odds.at(3));
     EXPECT_EQ(7, odds.at(4));
 }
+
+TEST(SimpleCollectionsTest, pairsUsage) {
+    std::pair<std::string, int> fred{"Fred", 123};
+    EXPECT_STREQ("Fred", fred.first.c_str());
+    EXPECT_EQ(123, fred.second);
+
+    std::pair<std::string, int> ted{"Ted", 456};
+    swap(fred, ted);
+    EXPECT_STREQ("Fred", ted.first.c_str());
+    EXPECT_EQ(123, ted.second);
+
+    fred.swap(ted);
+    EXPECT_STREQ("Ted", ted.first.c_str());
+    EXPECT_EQ(456, ted.second);
+}
+
+
