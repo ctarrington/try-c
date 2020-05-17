@@ -62,6 +62,10 @@ TEST(SimpleCollectionsTest, pairsUsage) {
     fred.swap(ted);
     EXPECT_STREQ("Ted", ted.first.c_str());
     EXPECT_EQ(456, ted.second);
+
+    std::pair<std::string, int> otherTed{"Ted", 456};
+    EXPECT_TRUE(ted == otherTed);
+    EXPECT_TRUE(fred != ted);
 }
 
 
