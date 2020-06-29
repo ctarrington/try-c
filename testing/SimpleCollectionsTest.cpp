@@ -1,5 +1,6 @@
 #include <array>
 #include <vector>
+#include <algorithm>
 
 #include "gtest/gtest.h"
 
@@ -66,6 +67,12 @@ TEST(SimpleCollectionsTest, pairsUsage) {
     std::pair<std::string, int> otherTed{"Ted", 456};
     EXPECT_TRUE(ted == otherTed);
     EXPECT_TRUE(fred != ted);
+}
+
+TEST(SimpleCollectionsTest, reverse) {
+    std::vector<int> odds{1,3,5,7,9,11};
+    std::reverse(odds.begin(), odds.end());
+    EXPECT_EQ(11, odds.at(0));
 }
 
 
