@@ -1,6 +1,11 @@
 #include <unordered_map>
 #include "gtest/gtest.h"
 
+bool contains(std::string word, std::string substring) {
+    auto index = word.find(substring);
+    return (index != std::string::npos);
+}
+
 class Holder {
     int value;
 
@@ -51,4 +56,30 @@ TEST(AutoTest, containers) {
     }
 
     EXPECT_EQ("hi", reverse[1]);
+}
+
+TEST(AutoTest, enums) {
+    enum Color {Red, Blue, Green};
+    EXPECT_EQ(1, Blue); // works but gross
+
+    enum class Flavor {Chocolate, Vanilla, Twist};
+    Flavor favorite = Flavor::Chocolate;
+    EXPECT_EQ(Flavor::Chocolate, favorite);
+
+    struct Cone {
+        enum class Base { Chocolate, Vanilla, Twist, Strawberry };
+        enum class Topping { Sprinkles, Jimmies, Dip };
+
+        Base base;
+        Topping topping;
+
+        Cone(Base base, Topping topping): base(base), topping(topping) {}
+    };
+
+    Cone mine { Cone::Base::Chocolate, Cone::Topping::Jimmies };
+    auto topping = mine.topping;
+    EXPECT_EQ(Cone::Topping::Jimmies, topping);
+    EXPECT_TRUE(contains(typeid(topping).name(), "Cone"));
+    EXPECT_TRUE(contains(typeid(topping).name(), "Topping"));
+    EXPECT_FALSE(contains(typeid(topping).name(), "Jimmies"));
 }
