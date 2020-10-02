@@ -83,3 +83,25 @@ TEST(AutoTest, enums) {
     EXPECT_TRUE(contains(typeid(topping).name(), "Topping"));
     EXPECT_FALSE(contains(typeid(topping).name(), "Jimmies"));
 }
+
+TEST(AutoTest, forloops) {
+    std::vector<int> numbers{1, 2, 3, 4};
+    for (auto& number : numbers) {
+        number = 1;
+    }
+
+    EXPECT_EQ(1, numbers.at(3));
+
+    std::vector<bool> beliefs{false, false, false, false};
+
+    // because we are assigning to an rvalue we need auto&& or const auto& instead of auto&
+    for (const auto& belief : beliefs) {
+        // look but don't change
+    }
+
+
+    for (auto&& belief : beliefs) {
+        belief = true;
+    }
+    EXPECT_TRUE(beliefs.at(3));
+}
