@@ -1,16 +1,17 @@
 #include <unordered_map>
 #include "gtest/gtest.h"
 
-bool contains(std::string word, std::string substring) {
+bool contains(const std::string& word, const std::string& substring) {
     auto index = word.find(substring);
     return (index != std::string::npos);
 }
 
 class Holder {
+private:
     int value;
 
 public:
-    Holder(int const _value): value{_value} {}
+    Holder(int _value): value{_value} {}
 
     int& get_modifiable_value() {
         return value;
@@ -41,7 +42,7 @@ TEST(AutoTest, references) {
 
     auto z = holder.get_modifiable_value();
     z = 66;
-    EXPECT_EQ(33, holder.get_modifiable_value()); // still 33 because z is an int not an int&
+    EXPECT_EQ(33, holder.get_modifiable_value()); // still 33 because z is an int not an int& and auto strips the &
 }
 
 TEST(AutoTest, containers) {
@@ -85,16 +86,22 @@ TEST(AutoTest, enums) {
 }
 
 TEST(AutoTest, forloops) {
-    std::vector<int> numbers{1, 2, 3, 4};
+    std::vector<int> numbers{2, 3, 4, 5};
+    std::vector<bool> beliefs{false, false, false, false};
+
+    for (auto number : numbers) {
+        number = 10;  // changed loop scoped copy, not the element of the vector
+    }
+    EXPECT_EQ(5, numbers.at(3));
+
     for (auto& number : numbers) {
         number = 1;
     }
-
     EXPECT_EQ(1, numbers.at(3));
 
-    std::vector<bool> beliefs{false, false, false, false};
 
     // because we are assigning to an rvalue we need auto&& or const auto& instead of auto&
+    // the same holds for bool&& or const bool&
     for (const auto& belief : beliefs) {
         // look but don't change
     }
@@ -104,4 +111,10 @@ TEST(AutoTest, forloops) {
         belief = true;
     }
     EXPECT_TRUE(beliefs.at(3));
+
+    // when in doubt you can use auto&& aka universal reference
+    for (auto&& number : numbers) {
+        number = 2;
+    }
+    EXPECT_EQ(2, numbers.at(3));
 }
