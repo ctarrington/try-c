@@ -2,9 +2,7 @@
 #include <array>
 #include <algorithm>
 
-using namespace std;
-
-array<int, 5> numbers{ {1,2,3,4,5} };
+std::array<int, 5> numbers{ {1,2,3,4,5} };
 
 TEST(PredicatesTest, functor) {
 
@@ -16,7 +14,7 @@ TEST(PredicatesTest, functor) {
         }
     };
 
-    int small = count_if(numbers.cbegin(), numbers.cend(), BelowFunctor(3));
+    int small = std::count_if(numbers.cbegin(), numbers.cend(), BelowFunctor(3));
     EXPECT_EQ(2, small);
 }
 
@@ -24,12 +22,12 @@ TEST(PredicatesTest, readableClosure) {
     const int max{3};
     auto belowPredicate = [max] (const int& value) { return value < max; };
 
-    int small = count_if(numbers.cbegin(), numbers.cend(), belowPredicate);
+    int small = std::count_if(numbers.cbegin(), numbers.cend(), belowPredicate);
     EXPECT_EQ(2, small);
 }
 
 TEST(PredicatesTest, inlineClosure) {
     const int max{3};
-    int small = count_if(numbers.cbegin(), numbers.cend(), [max] (const int& value) { return value < max; });
+    int small = std::count_if(numbers.cbegin(), numbers.cend(), [max] (const int& value) { return value < max; });
     EXPECT_EQ(2, small);
 }

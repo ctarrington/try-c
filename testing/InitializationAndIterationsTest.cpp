@@ -1,8 +1,5 @@
 #include "gtest/gtest.h"
 
-using namespace std;
-
-
 class IIThing {
 
 public:
@@ -14,9 +11,9 @@ public:
         numConstructions = 0;
     }
 
-    string name;
+    std::string name;
 
-    IIThing(string _name) :
+    IIThing(std::string _name) :
         name{_name} {
         numConstructions++;
     };
@@ -41,9 +38,9 @@ int IIThing::numCopies = 0;
 TEST(InitializationAndIterationsTest, basic) {
     IIThing::resetCounts();
 
-    vector<IIThing> things {IIThing{"Fred"}, IIThing{"Ted"}};
+    std::vector<IIThing> things {IIThing{"Fred"}, IIThing{"Ted"}};
 
-    string concat = "";
+    std::string concat = "";
     for (const auto thing : things) {
         concat += thing.name;
     }
@@ -86,10 +83,10 @@ TEST(InitializationAndIterationsTest, basic) {
 }
 
 TEST(InitializationAndIterationsTest, initializerWins) {
-    vector<int> numbers(10, 1); // size, fill value
+    std::vector<int> numbers(10, 1); // size, fill value
     EXPECT_EQ(1, numbers.at(9));
 
-    vector<int> tenAndOne {10, 1};
+    std::vector<int> tenAndOne {10, 1};
     EXPECT_EQ(10, tenAndOne.at(0));
     EXPECT_EQ(1, tenAndOne.at(1));
     EXPECT_EQ(2, tenAndOne.size());

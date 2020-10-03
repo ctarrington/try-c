@@ -1,7 +1,5 @@
 #include "gtest/gtest.h"
 
-using namespace std;
-
 static int accessCounter = 0;
 
 int collect(int value) {

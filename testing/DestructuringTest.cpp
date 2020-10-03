@@ -1,11 +1,9 @@
 #include "gtest/gtest.h"
 
-using namespace std;
-
 class Person {
 
 public:
-    Person(string name, int height) {
+    Person(std::string name, int height) {
         this->name = name;
         this->height = height;
     }
@@ -13,7 +11,7 @@ public:
     Person(const Person&) = default;
     Person& operator=(const Person&) = default;
 
-    string getName() {
+    std::string getName() {
         return name;
     }
 
@@ -27,7 +25,7 @@ public:
     }
 
 private:
-    string name;
+    std::string name;
     int height;
 };
 
@@ -36,7 +34,7 @@ struct PersonResult {
     bool status;
 };
 
-PersonResult addEmployee(string name, int height) {
+PersonResult addEmployee(std::string name, int height) {
     Person* person = new Person(name, height);
 
     return {person, true};

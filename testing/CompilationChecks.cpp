@@ -1,7 +1,5 @@
 #include <iostream>
 
-using namespace std;
-
 class ImportantResource {
 public:
     ImportantResource() {
@@ -37,20 +35,20 @@ void foo() {
     liberated_reference_to_int = 11;
 }
 
-void mutate(string *name_ptr) {
+void mutate(std::string *name_ptr) {
     name_ptr[2] = 'A';
 }
 
 void use_mutate() {
-    const string const_name = "Fred";
-    string name = "Ted";
+    const std::string const_name = "Fred";
+    std::string name = "Ted";
 
-    string* const const_ptr = &name;
+    std::string* const const_ptr = &name;
 
     mutate(&name);
     mutate(const_ptr);
     // mutate(&const_name);  // cant pass a const to a mutating function
-    cout << const_name << endl;
+    std::cout << const_name << std::endl;
 }
 
 auto resource1_ptr = new ImportantResource();

@@ -58,11 +58,11 @@ TEST(TypeDeterminationTest, runTime) {
 
     std::vector<int> numbers{1,2,3,4};
     EXPECT_EQ(1, numbers.at(0));
-    string numbers_typename = typeid(numbers).name();
+    std::string numbers_typename = typeid(numbers).name();
     EXPECT_TRUE( numbers_typename == "NSt3__16vectorIiNS_9allocatorIiEEEE" || numbers_typename == "St6vectorIiSaIiEE");
 
     auto cpi = numbers.cbegin();
-    string cpi_typename = typeid(cpi).name();
+    std::string cpi_typename = typeid(cpi).name();
     EXPECT_TRUE( cpi_typename == "NSt3__111__wrap_iterIPKiEE" || cpi_typename == "N9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEE");
 
     int first = *cpi;

@@ -1,7 +1,5 @@
 #include "gtest/gtest.h"
 
-using namespace std;
-
 class Person {
 
 public:
@@ -54,13 +52,14 @@ TEST(HorribleTricksTests, charactersForNumbers) {
 }
 
 TEST(HorribleTricksTests, iterationFromPointer) {
-    string name = "Fred Flint";
+    std::string name = "Fred Flint";
     char fname[5] = "";
     char lname[6] = "";
     int fPosition = 0;
     int lPosition = 0;
 
-    for (string::const_iterator charItr = name.cbegin(); charItr != name.cend(); charItr++) {
+    auto name_cend = name.cend();
+    for (std::string::const_iterator charItr = name.cbegin(); charItr != name_cend; charItr++) {
         int offset = charItr - name.cbegin();
 
         if (offset < 4) {
@@ -75,14 +74,15 @@ TEST(HorribleTricksTests, iterationFromPointer) {
 }
 
 TEST(HorribleTricksTests, alternativeIteration) {
-    string name = "Fred Flint";
+    std::string name = "Fred Flint";
     char fname[5] = "";
     char lname[6] = "";
     int fPosition = 0;
     int lPosition = 0;
 
     int index = 0;
-    for (string::const_iterator charItr = name.cbegin(); charItr != name.cend(); charItr++, index++) {
+    auto name_cend = name.cend();
+    for (std::string::const_iterator charItr = name.cbegin(); charItr != name_cend; charItr++, index++) {
         if (index < 4) {
             fname[fPosition++] = *charItr;
         } else if (index > 4 && index < 10) {

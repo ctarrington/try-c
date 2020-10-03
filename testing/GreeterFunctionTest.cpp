@@ -2,7 +2,6 @@
 
 #include <boost/format.hpp>
 
-using namespace std;
 
 TEST(GreeterFunctionTest, oldSchool) {
     const char* greeting = "Hi";
@@ -21,7 +20,7 @@ TEST(GreeterFunctionTest, oldSchool) {
 TEST(GreeterFunctionTest, newSchool) {
     boost::format format("Hi, %1%%2%");
 
-    string greeting = str(format % "Fred" % "!");
+    std::string greeting = str(format % "Fred" % "!");
     EXPECT_STREQ("Hi, Fred!", greeting.c_str());
 }
 

@@ -3,16 +3,14 @@
 
 #include <iostream>
 
-using namespace std;
-
 class Greeting {
 
 private:
-    string prefix;
+    std::string prefix;
 
 public:
-    Greeting(string prefix);
-    string sayHelloTo(string name);
+    Greeting(std::string prefix);
+    std::string sayHelloTo(std::string name);
 };
 
 

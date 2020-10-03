@@ -43,6 +43,7 @@ TEST(AutoTest, references) {
     auto z = holder.get_modifiable_value();
     z = 66;
     EXPECT_EQ(33, holder.get_modifiable_value()); // still 33 because z is an int not an int& and auto strips the &
+    EXPECT_EQ(66, z);  // local copy modified
 }
 
 TEST(AutoTest, containers) {

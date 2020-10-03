@@ -9,10 +9,10 @@ public:
     static int copyCount;
     static int moveCount;
 
-    string name;
+    std::string name;
     int id;
 
-    Thingy(int _id, string _name):
+    Thingy(int _id, std::string _name):
         id(_id ),
         name(_name) {
     }
@@ -25,7 +25,7 @@ public:
 
     // never use const in move
     // noexcept facilitates use of move by containers
-    // note move doesnt nuke name, std:string's move assignment nukes name
+    // note move doesnt nuke name, std:std::string's move assignment nukes name
     // move just changes type
     Thingy(Thingy&& person) noexcept :
     id(person.id),
@@ -117,9 +117,9 @@ TEST(CopyAndMoveTest, createAndMoveToVectorNoAllocation) {
 }
 
 TEST(CopyAndMoveTest, moveString) {
-    string one = "one";
+    std::string one = "one";
 
-    string s = std::move(one);
+    std::string s = std::move(one);
     EXPECT_STREQ("one", s.c_str());
     EXPECT_STREQ("", one.c_str());
 }

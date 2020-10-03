@@ -4,7 +4,6 @@
 
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/filesystem.hpp>
-using namespace boost::filesystem;
 
 TEST(BoostTidbitsTests, simpleDateConstruction) {
     boost::gregorian::date d{ 1986, 9, 15 };
@@ -14,7 +13,7 @@ TEST(BoostTidbitsTests, simpleDateConstruction) {
 
 
 TEST(BoostTidbitsTests, currentPath) {
-    path path = current_path();
+    boost::filesystem::path path = boost::filesystem::current_path();
     std::string cwd = path.string();
     int index = cwd.find("test");
     EXPECT_GT(index, 0);

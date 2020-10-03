@@ -1,9 +1,9 @@
 #include "Greeting.h"
 
-Greeting::Greeting(string prefix) {
+Greeting::Greeting(std::string prefix) {
     this->prefix = prefix;
 }
 
-string Greeting::sayHelloTo(string name) {
+std::string Greeting::sayHelloTo(std::string name) {
     return this->prefix + ", " + name;
 }
