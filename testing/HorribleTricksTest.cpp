@@ -31,7 +31,7 @@ TEST(HorribleTricksTests, calculateOffset) {
     EXPECT_EQ(8, balance_offset);
 
     char* buffer = (char*) joe;
-    int height = (int) buffer[height_offset];
+    int height = static_cast<int>(buffer[height_offset]);
     EXPECT_EQ(height, joe->height);
 }
 
