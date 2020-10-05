@@ -31,6 +31,29 @@ public:
     ~IIThing() = default;
 };
 
+class PermissiveContainer {
+public:
+    PermissiveContainer(const size_t& _value): value(_value) {}
+    int getValue() {
+        return value;
+    }
+
+private:
+    int value;
+};
+
+
+class ExplicitContainer {
+public:
+    explicit ExplicitContainer(const size_t& _value): value(_value) {}
+    int getValue() {
+        return value;
+    }
+
+private:
+    int value;
+};
+
 int IIThing::numConstructions = 0;
 int IIThing::numCopies = 0;
 
@@ -92,5 +115,33 @@ TEST(InitializationAndIterationsTest, initializerWins) {
     EXPECT_EQ(2, tenAndOne.size());
 }
 
+TEST(InitializationAndIterationsTest, convertingConstructor) {
+    PermissiveContainer one(true);
+    PermissiveContainer silly('a');
+    EXPECT_EQ(1, one.getValue());
+    EXPECT_EQ(97, silly.getValue());
+
+    std::vector<PermissiveContainer> containers{1, true, false, 'a'};
+    EXPECT_EQ(1, containers.at(0).getValue());
+    EXPECT_EQ(1, containers.at(1).getValue());
+    EXPECT_EQ(0, containers.at(2).getValue());
+    EXPECT_EQ(97, containers.at(3).getValue());
+
+    PermissiveContainer pc = 'b';
+    EXPECT_EQ(98, pc.getValue());
+}
+
+TEST(InitializationAndIterationsTest, explicitConstructor) {
+    ExplicitContainer one(true);
+    ExplicitContainer silly('a');
+    EXPECT_EQ(1, one.getValue());
+    EXPECT_EQ(97, silly.getValue());
+
+    // std::vector<ExplicitContainer> containers{1, true, false, 'a'};
+    // no matching constructor
+
+    // ExplicitContainer pc = 'b';
+    // no viable conversion
+}
 
 
