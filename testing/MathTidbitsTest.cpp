@@ -22,5 +22,19 @@ TEST(MathTidbitsTests, compileTimeMath) {
     // simplified
     EXPECT_EQ(three_sixth::num, 1);
     EXPECT_EQ(three_sixth::den, 2);
+}
 
+TEST(MathTidbitsTests, conversions) {
+    auto fortyTwo = std::stoi("42");
+    auto seven = std::stoi("111", nullptr, 2);
+
+    EXPECT_EQ(42, fortyTwo);
+    EXPECT_EQ(7, seven);
+
+    std::string raw = "123 890";
+    size_t next;
+    auto oneTwentyThree = std::stoi(raw, &next, 10);
+    auto eightNinety = std::stoi(raw.substr(next));
+    EXPECT_EQ(123, oneTwentyThree);
+    EXPECT_EQ(890, eightNinety);
 }
