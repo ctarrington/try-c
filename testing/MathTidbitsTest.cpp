@@ -1,4 +1,6 @@
+#include <limits>
 #include <ratio>
+#include <random>
 
 #include "gtest/gtest.h"
 
@@ -37,4 +39,22 @@ TEST(MathTidbitsTests, conversions) {
     auto eightNinety = std::stoi(raw.substr(next));
     EXPECT_EQ(123, oneTwentyThree);
     EXPECT_EQ(890, eightNinety);
+}
+
+TEST(MathTidbitsTests, limits) {
+    EXPECT_EQ(2147483647, std::numeric_limits<int>::max());
+}
+
+TEST(MathTidbitsTests, randomness) {
+    std::random_device rd{};
+    std::mt19937 engine{rd()};
+    std::uniform_int_distribution<> ud{1,6};
+
+    float sum{0.0};
+    int count{1000*1000};
+    for (auto ctr=0; ctr < count; ctr++) {
+        sum += ud(engine);
+    }
+
+    EXPECT_NEAR(21./6., sum/count, 0.005);
 }
