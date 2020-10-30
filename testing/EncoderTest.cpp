@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include <algorithm>
 #include "gtest/gtest.h"
 
 std::string repeat(const std::string &value, const int count) {
@@ -25,33 +26,66 @@ static const std::map<short, char> valueToLetterMap {
 };
 
 std::string compress(const std::string &raw) {
+    int block_size = 14;
+    std::string combined;
+
     int result = 1; // sentinel
+    int letter_ctr = 0;
     for (const char &letter : raw) {
         if (letterToValueMap.count(letter) > 0) {
             const short value = letterToValueMap.find(letter)->second;
             result <<= 2;
             result |= value;
+
+            letter_ctr++;
+
+            if (letter_ctr == block_size) {
+                letter_ctr = 0;
+                combined = combined.length() > 0 ? std::to_string(result) + "," + combined : std::to_string(result);
+                result = 1;
+            }
         }
     }
 
-    return std::to_string(result);
+    if (result > 1) {
+        combined = combined.length() > 0 ? std::to_string(result) + "," + combined : std::to_string(result);
+    }
+
+    return combined;
 }
 
 std::string uncompress(const std::string &raw) {
-    std::string result;
+    std::string combined;
+    std::string remaining = raw;
 
-    int number = std::stoi(raw);
-    while (log2(number) > 1) {
-        short extracted = number & 3;
-        if (valueToLetterMap.count(extracted) > 0) {
-            char letter = valueToLetterMap.find(extracted)->second;
-            result = letter + result;
+    while (remaining.length() > 0) {
+        std::string result;
 
-            number >>= 2;
+        int split_point = 0;
+        std::string block = remaining;
+        if (remaining.find_last_of(",") != std::string::npos) {
+            split_point = remaining.find_last_of(",") + 1;
+            block = remaining.substr(split_point);
+            remaining = remaining.substr(0, split_point-1);
+        } else {
+           remaining = "";
         }
+
+        int number = std::stoi(block);
+        while (log2(number) > 1) {
+            short extracted = number & 3;
+            if (valueToLetterMap.count(extracted) > 0) {
+                char letter = valueToLetterMap.find(extracted)->second;
+                result = letter + result;
+
+                number >>= 2;
+            }
+        }
+
+        combined += result;
     }
 
-    return result;
+    return combined;
 }
 
 
@@ -65,7 +99,7 @@ TEST(EncoderTest, small) {
     float compressed_size = static_cast<float>(compressed.length());
     float raw_size = static_cast<float>(raw.length());
     float ratio =  compressed_size / raw_size;
-    EXPECT_LT(ratio, 0.7);
+    EXPECT_LT(ratio, 0.75);
 }
 
 
@@ -84,6 +118,8 @@ TEST(EncoderTest, large) {
 
     EXPECT_EQ(raw, recovered);
 
-    float ratio = static_cast<float>(sizeof(compressed)) / static_cast<float>(sizeof(raw));
-    EXPECT_LT(ratio, 0.3);
+    float compressed_size = static_cast<float>(compressed.length());
+    float raw_size = static_cast<float>(raw.length());
+    float ratio =  compressed_size / raw_size;
+    EXPECT_LT(ratio, 0.75);
 }
