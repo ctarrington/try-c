@@ -4,6 +4,7 @@
 
 std::string repeat(const std::string &value, const int count) {
     std::string result;
+    result.reserve(count * value.length());
     for (int ctr=0; ctr<count;ctr++) {
         result += value;
     }
@@ -11,14 +12,13 @@ std::string repeat(const std::string &value, const int count) {
     return result;
 };
 
-std::string long_as_string(const long &value) {
+std::string long_as_hex_string(const long &value) {
     std::stringstream stream;
     stream << std::hex << value;
-    std::string result(stream.str());
-    return result;
+    return stream.str();
 }
 
-long hex_string_as_long(const std::string block) {
+long hex_string_as_long(const std::string &block) {
     long value;
     std::stringstream stream;
     stream << std::hex << block;
@@ -57,40 +57,39 @@ std::string compress(const std::string &raw) {
 
             if (letter_ctr == block_size) {
                 letter_ctr = 0;
-                combined = combined.length() > 0 ? long_as_string(result) + combined : long_as_string(result);
+                combined += long_as_hex_string(result);
                 result = 1;
             }
         }
     }
 
     if (result > 1) {
-        combined = combined.length() > 0 ? long_as_string(result) + combined : long_as_string(result);
+        combined += long_as_hex_string(result);
     }
 
     return combined;
 }
 
 std::string uncompress(const std::string &raw) {
-    int block_size = 16;
+    size_t block_size = 16;
     std::string combined;
     std::string remaining = raw;
 
     while (remaining.length() > 0) {
         std::string result;
 
-        int split_point = 0;
-        std::string block = remaining;
+        std::string block;
         if (remaining.length() > block_size) {
-            split_point = remaining.length() - block_size;
-            block = remaining.substr(split_point);
-            remaining = remaining.substr(0, split_point);
+            block = remaining.substr(0, block_size);
+            remaining = remaining.substr(block_size);
         } else {
-           remaining = "";
+            block = remaining;
+            remaining = "";
         }
 
         long number = hex_string_as_long(block);
         while (log2(number) > 1) {
-            short extracted = number & 3;
+            auto extracted = static_cast<short>(number & 3);
             if (valueToLetterMap.count(extracted) > 0) {
                 char letter = valueToLetterMap.find(extracted)->second;
                 result = letter + result;
@@ -121,8 +120,8 @@ TEST(EncoderTest, small) {
 
     EXPECT_EQ(raw, recovered);
 
-    float compressed_size = static_cast<float>(compressed.length());
-    float raw_size = static_cast<float>(raw.length());
+    auto compressed_size = static_cast<float>(compressed.length());
+    auto raw_size = static_cast<float>(raw.length());
     float ratio =  compressed_size / raw_size;
     EXPECT_LT(ratio, 0.75);
 }
@@ -155,14 +154,14 @@ TEST(EncoderTest, exactPlusOne) {
 }
 
 TEST(EncoderTest, large) {
-    std::string raw = repeat("ACGT", 100*1000);
+    std::string raw = repeat("ACGT", 1000*1000);
     std::string compressed = compress(raw);
     std::string recovered = uncompress(compressed);
 
     EXPECT_EQ(raw, recovered);
 
-    float compressed_size = static_cast<float>(compressed.length());
-    float raw_size = static_cast<float>(raw.length());
+    auto compressed_size = static_cast<float>(compressed.length());
+    auto raw_size = static_cast<float>(raw.length());
     float ratio =  compressed_size / raw_size;
 
     EXPECT_LT(ratio, 0.55);
