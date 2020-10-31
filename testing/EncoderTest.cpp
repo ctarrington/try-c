@@ -11,6 +11,22 @@ std::string repeat(const std::string &value, const int count) {
     return result;
 };
 
+std::string long_as_string(const long &value) {
+    std::stringstream stream;
+    stream << std::hex << value;
+    std::string result(stream.str());
+    return result;
+}
+
+long hex_string_as_long(const std::string block) {
+    long value;
+    std::stringstream stream;
+    stream << std::hex << block;
+    stream >> value;
+
+    return value;
+}
+
 static const std::map<char, short> letterToValueMap {
         {'A', 0},
         {'C', 1},
@@ -41,25 +57,25 @@ std::string compress(const std::string &raw) {
 
             if (letter_ctr == block_size) {
                 letter_ctr = 0;
-                combined = combined.length() > 0 ? std::to_string(result) + combined : std::to_string(result);
+                combined = combined.length() > 0 ? long_as_string(result) + combined : long_as_string(result);
                 result = 1;
             }
         }
     }
 
     if (result > 1) {
-        combined = combined.length() > 0 ? std::to_string(result) + combined : std::to_string(result);
+        combined = combined.length() > 0 ? long_as_string(result) + combined : long_as_string(result);
     }
 
     return combined;
 }
 
 std::string uncompress(const std::string &raw) {
+    int block_size = 16;
     std::string combined;
     std::string remaining = raw;
 
     while (remaining.length() > 0) {
-        int block_size = 19;
         std::string result;
 
         int split_point = 0;
@@ -72,7 +88,7 @@ std::string uncompress(const std::string &raw) {
            remaining = "";
         }
 
-        long number = std::stol(block);
+        long number = hex_string_as_long(block);
         while (log2(number) > 1) {
             short extracted = number & 3;
             if (valueToLetterMap.count(extracted) > 0) {
@@ -89,6 +105,14 @@ std::string uncompress(const std::string &raw) {
     return combined;
 }
 
+
+TEST(EncoderTest, tiny) {
+    std::string raw = "A";
+    std::string compressed = compress(raw);
+    std::string recovered = uncompress(compressed);
+
+    EXPECT_EQ(raw, recovered);
+}
 
 TEST(EncoderTest, small) {
     std::string raw = repeat("ACGT", 3);
@@ -117,7 +141,7 @@ TEST(EncoderTest, exact) {
     std::string compressed = compress(raw);
     std::string recovered = uncompress(compressed);
 
-    EXPECT_EQ(compressed.length(), 19);
+    EXPECT_EQ(compressed.length(), 16);
     EXPECT_EQ(raw, recovered);
 }
 
@@ -126,12 +150,12 @@ TEST(EncoderTest, exactPlusOne) {
     std::string compressed = compress(raw);
     std::string recovered = uncompress(compressed);
 
-    EXPECT_EQ(compressed.length(), 20);
+    EXPECT_EQ(compressed.length(), 17);
     EXPECT_EQ(raw, recovered);
 }
 
 TEST(EncoderTest, large) {
-    std::string raw = repeat("ACGT", 1*1000);
+    std::string raw = repeat("ACGT", 100*1000);
     std::string compressed = compress(raw);
     std::string recovered = uncompress(compressed);
 
@@ -141,5 +165,5 @@ TEST(EncoderTest, large) {
     float raw_size = static_cast<float>(raw.length());
     float ratio =  compressed_size / raw_size;
 
-    EXPECT_LT(ratio, 0.62);
+    EXPECT_LT(ratio, 0.55);
 }
