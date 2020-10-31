@@ -26,10 +26,10 @@ static const std::map<short, char> valueToLetterMap {
 };
 
 std::string compress(const std::string &raw) {
-    int block_size = 14;
+    int block_size = 31; // allow for sentinel
     std::string combined;
 
-    int result = 1; // sentinel
+    long result = 1; // sentinel
     int letter_ctr = 0;
     for (const char &letter : raw) {
         if (letterToValueMap.count(letter) > 0) {
@@ -41,14 +41,14 @@ std::string compress(const std::string &raw) {
 
             if (letter_ctr == block_size) {
                 letter_ctr = 0;
-                combined = combined.length() > 0 ? std::to_string(result) + "," + combined : std::to_string(result);
+                combined = combined.length() > 0 ? std::to_string(result) + combined : std::to_string(result);
                 result = 1;
             }
         }
     }
 
     if (result > 1) {
-        combined = combined.length() > 0 ? std::to_string(result) + "," + combined : std::to_string(result);
+        combined = combined.length() > 0 ? std::to_string(result) + combined : std::to_string(result);
     }
 
     return combined;
@@ -59,19 +59,20 @@ std::string uncompress(const std::string &raw) {
     std::string remaining = raw;
 
     while (remaining.length() > 0) {
+        int block_size = 19;
         std::string result;
 
         int split_point = 0;
         std::string block = remaining;
-        if (remaining.find_last_of(",") != std::string::npos) {
-            split_point = remaining.find_last_of(",") + 1;
+        if (remaining.length() > block_size) {
+            split_point = remaining.length() - block_size;
             block = remaining.substr(split_point);
-            remaining = remaining.substr(0, split_point-1);
+            remaining = remaining.substr(0, split_point);
         } else {
            remaining = "";
         }
 
-        int number = std::stoi(block);
+        long number = std::stol(block);
         while (log2(number) > 1) {
             short extracted = number & 3;
             if (valueToLetterMap.count(extracted) > 0) {
@@ -111,8 +112,26 @@ TEST(EncoderTest, silly) {
     EXPECT_EQ(raw, recovered);
 }
 
+TEST(EncoderTest, exact) {
+    std::string raw = repeat("C", 31);
+    std::string compressed = compress(raw);
+    std::string recovered = uncompress(compressed);
+
+    EXPECT_EQ(compressed.length(), 19);
+    EXPECT_EQ(raw, recovered);
+}
+
+TEST(EncoderTest, exactPlusOne) {
+    std::string raw = repeat("C", 32);
+    std::string compressed = compress(raw);
+    std::string recovered = uncompress(compressed);
+
+    EXPECT_EQ(compressed.length(), 20);
+    EXPECT_EQ(raw, recovered);
+}
+
 TEST(EncoderTest, large) {
-    std::string raw = repeat("ACGT", 1000);
+    std::string raw = repeat("ACGT", 1*1000);
     std::string compressed = compress(raw);
     std::string recovered = uncompress(compressed);
 
@@ -121,5 +140,6 @@ TEST(EncoderTest, large) {
     float compressed_size = static_cast<float>(compressed.length());
     float raw_size = static_cast<float>(raw.length());
     float ratio =  compressed_size / raw_size;
-    EXPECT_LT(ratio, 0.75);
+
+    EXPECT_LT(ratio, 0.62);
 }
