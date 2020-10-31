@@ -1,5 +1,6 @@
 #include <unordered_map>
 #include <algorithm>
+#include <cmath>
 #include "gtest/gtest.h"
 
 std::string repeat(const std::string &value, const int count) {
