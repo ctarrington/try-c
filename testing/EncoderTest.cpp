@@ -155,7 +155,7 @@ TEST(EncoderTest, exactPlusOne) {
 }
 
 TEST(EncoderTest, large) {
-    std::string raw = repeat("ACGT", 1000*1000);
+    std::string raw = repeat("ACGT", 10*1000);
     std::string compressed = compress(raw);
     std::string recovered = uncompress(compressed);
 
