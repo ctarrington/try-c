@@ -29,8 +29,12 @@ std::vector<int> in_order() {
    return sorted;
 }
 
+std::vector<int> in_reverse_order() {
+    return std::vector<int> {81,77,71,66,65,55,44,37,21,20,19,5,4,3,2,0};
+}
+
 void run_sorts(void sort_function(std::vector<int>::iterator, std::vector<int>::iterator)) {
-    std::vector<std::vector<int>> lists = {unsorted(), in_order()};
+    std::vector<std::vector<int>> lists = {unsorted(), in_order(), in_reverse_order()};
 
     for (auto list : lists) {
         auto sorted_copy = list;
