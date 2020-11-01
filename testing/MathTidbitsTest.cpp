@@ -51,7 +51,7 @@ TEST(MathTidbitsTests, randomness) {
     std::uniform_int_distribution<> ud{1,6};
 
     float sum{0.0};
-    int count{1000*1000};
+    int count{2*1000*1000};
     for (auto ctr=0; ctr < count; ctr++) {
         sum += ud(engine);
     }
