@@ -48,10 +48,11 @@ void run_sorts(void sort_function(std::vector<int>::iterator, std::vector<int>::
 void bubble_sort(std::vector<int>::iterator begin, std::vector<int>::iterator end) {
     bool swaps = true;
     auto current = begin;
+    auto last = end - 1;
     while (swaps) {
         swaps = false;
-        while (current < end) {
-            if (*current > *(current + 1)) {
+        while (current < last) {
+            if (*current > *(current+1)) {
                 std::iter_swap(current, current + 1);
                 swaps = true;
             }

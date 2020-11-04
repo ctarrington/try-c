@@ -25,7 +25,7 @@ public:
 
     // never use const in move
     // noexcept facilitates use of move by containers
-    // note move doesnt nuke name, std:std::string's move assignment nukes name
+    // note move doesnt nuke name, std::string's move assignment nukes name
     // move just changes type
     Thingy(Thingy&& person) noexcept :
     id(person.id),
